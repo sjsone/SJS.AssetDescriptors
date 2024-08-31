@@ -1,0 +1,36 @@
+SJS:
+  AssetDescriptors:
+    api:
+      token: "%env:ALT_TOKEN%"
+
+    descriptors:
+      imageCaption:
+        class: \SJS\AssetDescriptors\Descriptor\ImageCaptionDescriptor
+        options:
+          prompt: "Write a caption about the image in no more than 30 words."
+      imageAltCaption:
+        class: \SJS\AssetDescriptors\Descriptor\ImageCaptionDescriptor
+        options:
+          prompt: |
+            Geben Sie eine funktionale, objektive Beschreibung des Bildes in höchstens 30 Wörtern, so dass jemand, der es nicht sehen kann, es sich vorstellen kann. 
+            Halten Sie sich nach Möglichkeit an das Schema „Objekt - Handlung - Kontext“. Das Objekt ist der Hauptfokus. Die Handlung beschreibt, was passiert, in der Regel, was das Objekt tut. 
+            Der Kontext beschreibt die Umgebung. Zuerst sollte der Type des Bildes erwähnt werden, etwa ob es sich um eine Fotografie oder ein Gemälde handelt. Wenn Tiere oder Gegenstände klar erkannt wurden sollten diese auch benannt werden. 
+
+            Wenn kein Text auf dem Bild zu finden ist, brauchen Sie ihn nicht zu erwähnen.
+
+            Sie sollten die Beschreibung nicht mit einer Variation von „Das Bild“ beginnen.
+
+    directives:
+      describeWithTag:
+        match: >
+          !asset.caption 
+          && Type.isImage(asset) 
+          && (Tag.hasTag(asset, 'Caption') || Collection.inCollection(asset, 'Caption'))
+        descriptors:
+          altInCaption: imageAltCaption
+
+    matcher:
+      context:
+        Type: \SJS\AssetDescriptors\Matcher\TypeMatcher
+        Tag: \SJS\AssetDescriptors\Matcher\TagMatcher
+        Collection: \SJS\AssetDescriptors\Matcher\CollectionMatcher

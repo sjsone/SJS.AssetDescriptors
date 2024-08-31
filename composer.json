@@ -1,0 +1,22 @@
+{
+    "description": "",
+    "type": "neos-package",
+    "name": "sjs/asset-descriptors",
+    "require": {
+        "psr/http-message": "^1.0 || ^2.0",
+        "psr/http-server-handler": "^1.0",
+        "neos/neos": "^8.0",
+        "neos/flow": "^8.0",
+        "shel/neos-colorpicker": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "SJS\\AssetDescriptors\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "SJS.AssetDescriptors"
+        }
+    }
+}
