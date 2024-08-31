@@ -36,9 +36,30 @@ class Client
             GuzzleHttp\RequestOptions::JSON => $abstractRequest
         ]);
 
-        $responseBody = (string) $response->getBody();
+        $responseBody = json_decode((string) $response->getBody(), true);
 
-        return Chat\Completions\Response::fromJson($responseBody);
+        if (isset($responseBody["error"])) {
+            return $this->createErrorResponse($responseBody["error"]);
+        }
+
+        return $this->createResponseForRequest($abstractRequest, $responseBody);
+    }
+
+    protected function createErrorResponse(array $errorData): ErrorResponse
+    {
+        return match ($errorData["type"]) {
+            "invalid_request_error" => InvalidRequestErrorResponse::fromArray($errorData),
+            default => ErrorResponse::fromArray($errorData),
+        };
+    }
+
+    protected function createResponseForRequest(AbstractRequest $abstractRequest, array $responseBody): AbstractResponse
+    {
+        if ($abstractRequest instanceof Chat\Completions\Request) {
+            return Chat\Completions\Response::fromArray($responseBody);
+        }
+
+        throw new \Exception("Response for Request of type " . $abstractRequest::class . " is not known");
     }
 
     protected function urlForRequest(AbstractRequest $abstractRequest): string
