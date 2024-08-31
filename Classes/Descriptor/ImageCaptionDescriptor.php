@@ -8,6 +8,7 @@ use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\Image;
 use SJS\AssetDescriptors\API;
 use SJS\AssetDescriptors\API\Client;
+use SJS\AssetDescriptors\API\ErrorResponse;
 
 
 #[Flow\Proxy(false)]
@@ -61,6 +62,10 @@ class ImageCaptionDescriptor extends AbstractDescriptor
         $response = $this->client->request($payload);
         if (!$response) {
             return null;
+        }
+
+        if ($response instanceof ErrorResponse) {
+            throw new \Exception("API Responded with Error: " . $response->message);
         }
 
         if (!($response instanceof API\Chat\Completions\Response)) {
