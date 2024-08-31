@@ -85,16 +85,17 @@ class DescriptionManager
         }
     }
 
-    protected function buildContextForFindingDirective(Asset $asset): array
+    protected function buildContextForFindingDirective(Asset $asset, Directive $directive): array
     {
         return [
             "asset" => $asset,
-            "directive" => $this,
+            "directive" => $directive,
         ];
     }
 
-    protected function doesDirectiveMatchAsset(Directive $directive, Asset $asset, array $context): bool
+    protected function doesDirectiveMatchAsset(Directive $directive, Asset $asset): bool
     {
+        $context = $this->buildContextForFindingDirective($asset, $directive);
         $result = Utility::evaluateEelExpression(
             '${' . $directive->matcherExpression . '}',
             $this->compilingEvaluator,
@@ -107,10 +108,8 @@ class DescriptionManager
 
     protected function findMatchingDirective(Asset $asset): ?Directive
     {
-        $context = $this->buildContextForFindingDirective($asset);
-
         foreach ($this->directives as $directive) {
-            $result = $this->doesDirectiveMatchAsset($directive, $asset, $context);
+            $result = $this->doesDirectiveMatchAsset($directive, $asset);
             if ($result) {
                 return $directive;
             }
