@@ -1,13 +1,14 @@
 SJS:
   AssetDescriptors:
     api:
-      token: "%env:ALT_TOKEN%"
+      token: "%env:OPENAI_API_TOKEN%"
 
     descriptors:
       imageCaption:
         class: \SJS\AssetDescriptors\Descriptor\ImageCaptionDescriptor
         options:
           prompt: "Write a caption about the image in no more than 30 words."
+
       imageAltCaption:
         class: \SJS\AssetDescriptors\Descriptor\ImageCaptionDescriptor
         options:
