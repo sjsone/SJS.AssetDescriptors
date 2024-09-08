@@ -8,6 +8,11 @@ SJS:
         class: \SJS\AssetDescriptors\Descriptor\ImageCaptionDescriptor
         options:
           prompt: "Write a caption about the image in no more than 30 words."
+          # mediaTypes:
+          #   png: image/png
+          #   jpeg: image/jpeg
+          #   gif: image/gif
+          #   webp: image/webp
 
       imageAltCaption:
         class: \SJS\AssetDescriptors\Descriptor\ImageCaptionDescriptor
@@ -24,9 +29,8 @@ SJS:
     directives:
       describeWithTag:
         match: >
-          !asset.caption 
-          && Type.isImage(asset) 
-          && (Tag.hasTag(asset, 'Caption') || Collection.inCollection(asset, 'Caption'))
+          Type.isImage(asset)
+        # && (Tag.hasTag(asset, 'gpt') || Collection.inCollection(asset, 'gpt'))
         descriptors:
           altInCaption: imageAltCaption
 

@@ -16,6 +16,13 @@ class ImageCaptionDescriptor extends AbstractDescriptor
 {
     protected Client $client;
 
+    protected array $supportedMediaTypes = [
+        "png" => "image/png",
+        "jpeg" => "image/jpeg",
+        "gif" => "image/gif",
+        "webp" => "image/webp",
+    ];
+
     public function __construct(
         string $name,
         array $options,
@@ -28,6 +35,10 @@ class ImageCaptionDescriptor extends AbstractDescriptor
     public function describe(Asset $asset)
     {
         if (!($asset instanceof Image)) {
+            return;
+        }
+
+        if (!in_array($asset->getMediaType(), $this->supportedMediaTypes)) {
             return;
         }
 
